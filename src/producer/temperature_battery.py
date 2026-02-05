@@ -6,7 +6,7 @@ from datetime import datetime, timezone
 
 def gerador(id):
     dado = round(uniform(22, 25), 4)
-    return {'id': str(id), 
+    return {'id': id, 
                 'data': dado, 
                 'type': 'Temperature Battery', 
                 'timestamp': datetime.now(timezone.utc).isoformat()
