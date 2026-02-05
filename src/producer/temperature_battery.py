@@ -5,9 +5,9 @@ from random import uniform
 from datetime import datetime, timezone
 
 def gerador(id):
-    dados = uniform(22, 25)
+    dado = round(uniform(22, 25), 4)
     return {'id': str(id), 
-                'data': str(dados), 
+                'data': dado, 
                 'type': 'Temperature Battery', 
                 'timestamp': datetime.now(timezone.utc).isoformat()
                 }
