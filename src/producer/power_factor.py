@@ -1,29 +1,15 @@
-import boto3
-import json
+# codicao ideal = 1
+# variacao entre 0.8 e 1
+
 from random import uniform
 from datetime import datetime, timezone
-import time
 
-cliente = boto3.client('kinesis')
-
-duracao = 5 * 60 # 5 minutos (em segundos)
-inicio = time.time()
-
-
-while time.time() - inicio < duracao:
+def gerador(id):
     dados = uniform(0.8, 1)
-    id += 1
-    
-    registro = {'id': str(id), 
+    return {'id': str(id), 
                 'data': str(dados), 
-                'type': 'power factor', 
+                'type': 'Power Factor', 
                 'timestamp': datetime.now(timezone.utc).isoformat()
                 }
     
-    cliente.put_record(
-        StreamName = '', 
-        Data = json.dumps(registro), 
-        PartitionKey = '02'
-        )
 
-    time.sleep(10)
