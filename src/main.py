@@ -4,7 +4,7 @@ from producer import hydraulic_prepressure as hp, power_factor as pf, temperatur
 from streaming.kinesis_writer import envia_kinesis
 
 cliente = boto3.client('kinesis')
-stream_name = ''
+stream_name = 'WindFarm'
 partition_key = '02'
 
 inicio = time.time()
