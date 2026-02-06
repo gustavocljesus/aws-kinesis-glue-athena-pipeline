@@ -9,5 +9,5 @@ def gerador(id):
     return {'id': id, 
                 'data': dado, 
                 'type': 'Hydraulic Prepressure', 
-                'timestamp': datetime.now(timezone.utc).isoformat()
+                'event_timestamp': datetime.now(timezone.utc).isoformat()
                 }

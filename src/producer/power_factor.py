@@ -9,7 +9,7 @@ def gerador(id):
     return {'id': id, 
                 'data': dado, 
                 'type': 'Power Factor', 
-                'timestamp': datetime.now(timezone.utc).isoformat()
+                'event_timestamp': datetime.now(timezone.utc).isoformat()
                 }
     
 
