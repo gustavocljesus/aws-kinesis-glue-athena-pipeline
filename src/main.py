@@ -4,6 +4,12 @@ from producer import hydraulic_prepressure as hp, power_factor as pf, temperatur
 from streaming.kinesis_writer import envia_kinesis
 from dotenv import load_dotenv
 import os
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 load_dotenv()
 
@@ -26,11 +32,24 @@ while time.time() - inicio < duracao:
     ]
 
     for registro in registros:
-        envia_kinesis(
+        resposta = envia_kinesis(
             cliente,
             stream_name,
             registro,
             partition_key
         )
-    
+        
+        if resposta is None:
+            time.sleep(2)
+            
+            resposta = envia_kinesis(
+                cliente,
+                stream_name,
+                registro,
+                partition_key
+            )
+
+            if resposta is None:
+                logging.error("Falha definitiva ao enviar registro")
+
     time.sleep(pausa)
