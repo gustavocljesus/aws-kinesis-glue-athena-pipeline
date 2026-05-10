@@ -1,7 +1,7 @@
 import boto3
 import time
-from producer import hydraulic_prepressure as hp, power_factor as pf, temperature_battery as tb
-from streaming.kinesis_writer import envia_kinesis
+from producers import hydraulic_prepressure as hp, power_factor as pf, temperature_battery as tb
+from ingestion.stream_writer import envia_kinesis
 from dotenv import load_dotenv
 import os
 import logging
