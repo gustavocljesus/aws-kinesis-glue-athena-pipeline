@@ -1,114 +1,155 @@
-## Descrição
-Este projeto implementa uma arquitetura de Data Lake na AWS para ingestão, processamento e consulta de dados simulados de uma fazenda eólica, utilizando streaming em tempo quase real.
+# AWS Real-Time Wind Farm Data Pipeline
 
-## Objetivo
-- Simular dados de uma fazenda eólica
-- Coletar dados via streaming
-- Converter os dados para parquet com um processo de ETL
-- Fazer consultas com os dados tratados
+**Pipeline de ingestão em streaming com transformação serverless na AWS.**
 
-## Tecnologias Utilizadas
-- Python
-- Amazon Kinesis Data Streams
-- Amazon Data Firehose
-- Amazon S3
-- AWS Glue
-- Amazon Athena
+#### Projeto de Engenharia de Dados para monitoramento de sensores de uma fazenda eólica, processando dados de simuladores, armazenando em um Data Lake e disponibilizando relatórios com AWS Athena.
 
-## Conceitos Aplicados
-- Arquitetura Data Lake
-- Streaming de dados
-- ETL em ambiente distribuído
-- Armazenamento em formato columnar (Parquet)
-- Particionamento para otimização de consultas
+**Capacidades do Pipeline:**
 
-## Arquitetura
-![Data Pipeline Architecture](docs/data-pipeline-architecture.svg)
+- Ingestão contínua de eventos simulados
+- Conversão JSON → Parquet
+- Redução de custo analítico com Athena
+- Detecção de valores fora do padrão
 
-## Fluxo da Pipeline
-1. Produtores Python simulam dados de sensores
-2. Os dados são enviados para o Amazon Kinesis Data Streams
-3. O Amazon Data Firehose entrega os dados no S3 (camada raw)
-4. Um job no AWS Glue transforma os dados para formato Parquet
-5. Os dados tratados são particionados e disponibilizados para consulta no Amazon Athena
+---
 
-## Camadas do Data Lake
-- Raw: dados brutos recebidos via streaming
-- Processed: dados transformados para Parquet e particionados por tipo
+## Resumo
+
+- **Tipo de pipeline:** Streaming Data Pipeline
+- **Fonte:** Simuladores com Python
+- **Data Lake:** AWS S3
+- **Transformação:** AWS Glue Job
+- **Consumo:** AWS Athena
+
+---
+
+## Sobre o projeto
+Sensores em uma fazenda eólica são dispositivos de monitoramento e controle essenciais para a operação segura, eficiente e automática das turbinas eólicas. Os dados desses sensores precisam ser coletados em tempo real para que se possa reduzir custos de manutenção através de monitoramento preditivo e assegurar a integridade física do equipamento contra ventos fortes ou falhas.
+
+Este projeto demonstra:
+
+- Construção de pipeline de dados ponta a ponta na nuvem
+- Solução orientada a streaming
+- Controle de gastos via compute serverless
+
+**Objetivo:** Detectar comportamentos anômalos nos sensores durante a operação das turbinas.
+
+---
+
+## Arquitetura do pipeline
+![Data Pipeline Architecture](docs/pipeline.png)
+
+Fluxo dos dados:
+
+Python → Kinesis Data Streams → Kinesis Data Firehose → S3 Raw → Glue Job → S3 Curated → Glue Data Catalog → Athena
+
+Etapas:
+
+1. Simuladores em Python geram eventos JSON
+2. Kinesis Data Streams recebe os eventos em tempo real
+3. Kinesis Firehose entrega os dados no S3 (camada raw)
+4. AWS Glue Job trata e transforma os dados para Parquet
+5. AWS Glue Crawler detecta schemas e atualiza o Glue Data Catalog
+6. Athena consulta os dados catalogados da camada curated
+
+---
+
+## Stack Tecnológica
+
+| Camada         | Tecnologia                | Uso no Projeto                               |
+|----------------|---------------------------|----------------------------------------------|
+| Fonte de Dados | Python                    | Gera eventos simulados em JSON               |
+| Ingestão       | AWS Kinesis Data Streams  | Recebe eventos quase em tempo real           |
+| Entrega        | AWS Kinesis Data Firehose | Entrega os dados no Data Lake                |
+| Data Lake      | AWS S3                    | Armazena os dados brutos e tratados          |
+| Transformação  | AWS Glue Job              | Transforma e carrega dados na camada curated | 
+| Catalogação    | AWS Glue Crawler          | Detecta esquemas e atualiza tabelas          |
+| Metadados      | AWS Glue Data Catalog     | Armazena metadados para consulta no Athena   |
+| Analítica      | AWS Athena                | Executa consultas analíticas                 |
+
+---
 
 ## Estrutura do Projeto
+
+### Local
 ```text
-project-pipeline/
+.
 ├── docs/
-│   ├── data-pipeline-architecture.svg
-│   └── glue_visual_ETL.png
 ├── src/
-│   ├── athena/
-│   │    └── analytics_queries/
-│   │        └── registro_intervalo_datas.sql
-│   ├── glue/
-│   │   └── jobWindFarm.py
-│   ├── producer/
+│   ├── ingestion/
+│   │   └── stream_writer.py
+│   ├── processing/
+│   │   └── transform_job.py
+│   ├── producers/
 │   │   ├── hydraulic_prepressure.py
 │   │   ├── power_factor.py
 │   │   └── temperature_battery.py
-│   └── streaming/
-│       └── kinesis_writer.py
-├── main.py
-├── .env
+│   ├── sql/
+│   │   ├── analytics/
+│   │   │   └── registro_intervalo_datas.sql
+│   │   └── ddl/
+│   └── pipeline.py
 ├── .env.example
 ├── .gitignore
 ├── README.md
 └── requirements.txt
+```
 
-s3://my-pipeline-engdados-project/
-├── data-lake/
-│    ├── raw/
-│    │   └── kinesis/
-│    │       └── 2026/...
-│    └── processed/
-│        └── glue/
-│            └── type=.../
+### S3
 
-s3://aws-assets-my-bucket/
+```text
+s3://meu-bucket/
+├── raw/
+│   └── 2026/...
+└── curated/
+    └── 2026/...
+
+s3://meu-bucket-assets/
 ├── scripts/
 ├── logs/
 ├── temp/
-└── queries-athena/
+└── queries/
 ```
-**Observação:** o particionamento será feito pelo Amazon Data Firehose e o AWS Glue.
 
-## Base de Dados
-Os dados são simulados por produtores Python que representam sensores de uma fazenda eólica, como:
-- Temperatura da bateria
-- Fator de potência
-- Pressão hidráulica
-
-Os dados são gerados em tempo quase real e enviados via streaming.
-
-## Consultas SQL
-**Registro em um intervalo de datas:** registro dos dados em um intervalo de tempo predefinido, organizado pelos tipos de dados coletados.
+---
 
 ## Como Executar
-1. Criar um fluxo de dados no Amazon Kinesis Data Streams
-2. Criar um fluxo do Firehose no Amazon Data Firehose
-    - Nesta etapa o intervalo do buffer foi definido para 60 segundos.
-3. Instalar dependências: 
-    - `pip install -r requirements.txt`
-4. Executar o script `main.py`
-    - As configurações do AWS foram definidas via CLI no `aws configure`
-    - Alternativamente, as credenciais podem ser configuradas diretamente no `boto3.client()`
-5. Criar uma role IAM para o AWS Glue com políticas que permitam acesso ao S3, Glue Data Catalog e execução do job.
-6. Criar um database em AWS Glue
-7. Criar um crawler em  AWS Glue
-8. Criar um Visual ETL Job semelhante ao `glue_visual_ETL.png` disponível em `docs/` ou executar o script `jobWindFarm.py` disponível em `src/glue/`
-    - **Observação:** caso utilize `jobWindFarm.py`, ajuste previamente os parâmetros do job. 
-    - As dependências do script são providas pelo ambiente gerenciado do AWS Glue.
-9. Executar `registro_intervalo_datas.sql` disponível em `src/athena/analytics_queries/` no Amazon Athena
 
-## Melhorias Futuras
-- Os dados produzidos são alguns dos dados gerados em uma fazenda eólica. Para uma simulação mais próxima do real, seria necessário produzir os outros tipos de dados.
-- Como o projeto é simulado, o volume de dados é reduzido. Em um cenário real, a consulta presente no projeto poderia ser estendida com funções analíticas para:
-    - cálculo de médias móveis
-    - detecção de outliers
-    - identificação automática de coletas fora do padrão esperado
+### Pré-requisitos
+
+- Conta na AWS
+- Python 3.11+
+
+### Passos
+1. Clone o repositório:
+
+```bash
+git clone https://github.com/gustavocljesus/aws-kinesis-glue-athena-pipeline.git
+```
+
+2. Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+> Lembre-se de criar um ambiente virtual: 
+> ```bash
+> python -m venv .venv
+> ```
+
+3. Configure os serviços na AWS
+
+4. Execute o arquivo ``pipeline.py`` disponível em ``src/``
+
+5. Configure o Glue Job semelhante ao arquivo ``docs/glue-visual-ETL.png``
+
+6. Efetue as consultas disponíveis em ``sql/analytics/``
+
+---
+
+## Próximos passos
+- [ ] Tornar os simuladores mais realistas
+- [ ] Garantir idempotência no pipeline
+- [ ] Adicionar monitoramento com AWS CloudWatch
+- [ ] Enviar alertas automáticos com AWS SNS
+- [ ] Automatizar o pipeline com Terraform
