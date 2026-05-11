@@ -1,5 +1,5 @@
 from random import uniform
-from chance_error_util import apply_error, maybe_outlier
+from .chance_error_util import apply_error, maybe_outlier
 
 def generator_hydraulicPressure(error_rate=0.1, degradation=False):
     if degradation:
