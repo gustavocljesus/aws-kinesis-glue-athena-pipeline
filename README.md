@@ -1,4 +1,4 @@
-# AWS Real-Time Wind Farm Data Pipeline
+# AWS Wind Farm Data Pipeline
 
 **Pipeline de ingestão em streaming com transformação serverless na AWS.**
 
@@ -15,7 +15,7 @@
 
 ## Resumo
 
-- **Tipo de pipeline:** Streaming Data Pipeline
+- **Tipo de pipeline:** Hybrid Data Pipeline
 - **Fonte:** Simuladores com Python
 - **Data Lake:** AWS S3
 - **Transformação:** AWS Glue Job
@@ -24,12 +24,12 @@
 ---
 
 ## Sobre o projeto
-Sensores em uma fazenda eólica são dispositivos de monitoramento e controle essenciais para a operação segura, eficiente e automática das turbinas eólicas. Os dados desses sensores precisam ser coletados em tempo real para que se possa reduzir custos de manutenção através de monitoramento preditivo e assegurar a integridade física do equipamento contra ventos fortes ou falhas.
+Sensores em uma fazenda eólica são dispositivos de monitoramento e controle essenciais para a operação segura, eficiente e automática das turbinas eólicas. Os dados desses sensores precisam ser coletados quase em tempo real para que se possa reduzir custos de manutenção através de monitoramento preditivo e assegurar a integridade física do equipamento contra ventos fortes ou falhas.
 
 Este projeto demonstra:
 
 - Construção de pipeline de dados ponta a ponta na nuvem
-- Solução orientada a streaming
+- Arquitetura híbrida para ingestão contínua e processamento analítico
 - Controle de gastos via compute serverless
 
 **Objetivo:** Detectar comportamentos anômalos nos sensores durante a operação das turbinas.
