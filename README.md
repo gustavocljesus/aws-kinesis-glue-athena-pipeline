@@ -125,25 +125,36 @@ s3://meu-bucket-assets/
 
 ```bash
 git clone https://github.com/gustavocljesus/aws-kinesis-glue-athena-pipeline.git
+cd aws-kinesis-glue-athena-pipeline
 ```
 
-2. Instale as dependências:
+2. Instale as dependências e sincronize o ambiente:
 
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
-> Lembre-se de criar um ambiente virtual: 
-> ```bash
-> python -m venv .venv
-> ```
 
-3. Configure os serviços na AWS
+3. Ative o ambiente (opcional):
 
-4. Execute o arquivo ``pipeline.py`` disponível em ``src/``
+```bash
+source .venv/bin/activate # Linux/Mac
+# ou
+.venv\Scripts\activate # Windows
+```
 
-5. Configure o Glue Job semelhante ao arquivo ``docs/glue-visual-ETL.png``
+4. Configure os serviços na AWS (S3, Kinesis, Glue e Athena)
 
-6. Efetue as consultas disponíveis em ``sql/analytics/``
+> Configure o Glue Job conforme o diagrama em `docs/glue-visual-ETL.png`
+
+5. Execute o pipeline:
+
+```bash
+uv run python -m src.pipeline
+```
+
+6. Execute o Glue Job manualmente na AWS
+
+7. Execute as consultas SQL em `sql/analytics/`
 
 ---
 
