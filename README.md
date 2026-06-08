@@ -88,11 +88,16 @@ Etapas:
 │   │   ├── analytics/
 │   │   │   └── registro_intervalo_datas.sql
 │   │   └── ddl/
+│   ├── utils/
+│   │   ├── chance_error.py
+│   │   └── value_generator.py
 │   └── pipeline.py
 ├── .env.example
 ├── .gitignore
+├── .python-version
+├── pyproject.toml
 ├── README.md
-└── requirements.txt
+└── uv.lock
 ```
 
 ### S3
