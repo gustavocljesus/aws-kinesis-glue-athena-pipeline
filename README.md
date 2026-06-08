@@ -63,8 +63,8 @@ Etapas:
 | Entrega        | AWS Kinesis Data Firehose | Entrega os dados no Data Lake                |
 | Data Lake      | AWS S3                    | Armazena os dados brutos e tratados          |
 | Transformação  | AWS Glue Job              | Transforma e carrega dados na camada curated | 
-| Catalogação    | AWS Glue Crawler          | Detecta esquemas e atualiza tabelas          |
-| Metadados      | AWS Glue Data Catalog     | Armazena metadados para consulta no Athena   |
+| Descoberta     | AWS Glue Crawler          | Infere schema e popula o catálogo            |
+| Catalogação    | AWS Glue Data Catalog     | Armazena metadados das tabelas               |
 | Analítica      | AWS Athena                | Executa consultas analíticas                 |
 
 ---
