@@ -18,8 +18,8 @@ def sensor_hydraulic(id, degradation, frozen_ref):
     return {
         "event_id": event_id,
         "batch_id": id,
-        "sensor_id": "sensor_hydraulic-01",
-        "type": "hydraulic_pressure",
+        "sensor_id": "sensor-hydraulic-01",
+        "type": "hydraulic-pressure",
         "value": value,
         "event_timestamp": timestamp
     }
