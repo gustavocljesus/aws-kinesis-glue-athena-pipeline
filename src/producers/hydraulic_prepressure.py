@@ -1,6 +1,6 @@
 import hashlib
 import json
-from src.utils.value_generator import generator_hydraulicPressure
+from src.simulation.value_generator import generator_hydraulicPressure
 from datetime import datetime, timezone
 
 def sensor_hydraulic(id, degradation, frozen_ref):
@@ -23,6 +23,3 @@ def sensor_hydraulic(id, degradation, frozen_ref):
         "value": value,
         "event_timestamp": timestamp
     }
-
-if __name__ == "__main__":
-    print(sensor_hydraulic(id=1, degradation=True, frozen_ref={"value": 160.0}))
