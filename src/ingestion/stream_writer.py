@@ -6,14 +6,14 @@ from botocore.exceptions import BotoCoreError, ClientError
 logger = get_logger(__name__)
 
 @log_kinesis_end
-def send_kinesis(client, stream_name, register, partition_key):
+def send_kinesis(client, stream_name, record, partition_key):
     try:
         response = client.put_record(
             StreamName=stream_name,
-            Data=json.dumps(register),
+            Data=json.dumps(record),
             PartitionKey=partition_key
         )
-        return register, response
+        return record, response
     except (BotoCoreError, ClientError) as e:
          logger.error(f"Erro ao enviar para o Kinesis: {e}")
          return None

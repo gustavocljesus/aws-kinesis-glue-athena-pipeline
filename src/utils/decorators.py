@@ -6,11 +6,11 @@ logger = get_logger(__name__)
 
 def log_kinesis_end(func):
     @functools.wraps(func)
-    def wrapper(client, stream_name, register, partition_key):
-        sensor = register.get("type", "unknown")
-        batch_id = register.get("batch_id")
+    def wrapper(client, stream_name, record, partition_key):
+        sensor = record.get("type", "unknown")
+        batch_id = record.get("batch_id")
         start_time = time.time()
-        result = func(client, stream_name, register, partition_key)
+        result = func(client, stream_name, record, partition_key)
         elapsed = round(time.time() - start_time, 3)
 
         if result[1]:
