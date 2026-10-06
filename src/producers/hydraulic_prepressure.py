@@ -3,9 +3,9 @@ import json
 from src.simulation.value_generator import generator_hydraulicPressure
 from datetime import datetime, timezone
 
-def sensor_hydraulic(id, degradation, frozen_ref):
+def sensor_hydraulic(id, tax, seconds_elapsed, frozen_ref, drift_ref):
     timestamp = datetime.now(timezone.utc).isoformat()
-    value = generator_hydraulicPressure(degradation=degradation, frozen_ref=frozen_ref)
+    value = generator_hydraulicPressure(tax, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
 
     event_id = hashlib.sha256(
         json.dumps({

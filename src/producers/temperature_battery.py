@@ -3,9 +3,9 @@ import json
 from src.simulation.value_generator import generator_batteryTemperature
 from datetime import datetime, timezone
 
-def sensor_temperature_battery(id, degradation, frozen_ref):
+def sensor_temperature_battery(id, tax, seconds_elapsed, frozen_ref, drift_ref):
     timestamp = datetime.now(timezone.utc).isoformat()
-    value = generator_batteryTemperature(degradation=degradation, frozen_ref=frozen_ref)
+    value = generator_batteryTemperature(tax, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
     
     event_id = hashlib.sha256(
         json.dumps({

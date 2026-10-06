@@ -3,9 +3,9 @@ import json
 from src.simulation.value_generator import generator_powerFactor
 from datetime import datetime, timezone
 
-def sensor_power_factor(id, degradation, frozen_ref):
+def sensor_power_factor(id, tax, seconds_elapsed, frozen_ref, drift_ref):
     timestamp = datetime.now(timezone.utc).isoformat()
-    value = generator_powerFactor(degradation=degradation, frozen_ref=frozen_ref)
+    value = generator_powerFactor(tax, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
 
     event_id = hashlib.sha256(
         json.dumps({
