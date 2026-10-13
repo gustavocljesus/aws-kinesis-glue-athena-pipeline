@@ -1,7 +1,7 @@
 import boto3
 import time
 import os
-from utils.logging import get_logger
+from src.utils.logger import get_logger
 from dotenv import load_dotenv
 from cli import parse_args
 from producers import hydraulic_prepressure as hp, power_factor as pf, temperature_battery as tb
