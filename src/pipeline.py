@@ -3,7 +3,7 @@ import time
 import os
 from src.utils.logger import get_logger
 from dotenv import load_dotenv
-from cli import parse_args
+from src.cli import parse_args
 from src.producers import (
     hydraulic_pressure as hp,
     power_factor as pf,
