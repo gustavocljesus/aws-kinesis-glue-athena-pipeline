@@ -1,25 +1,10 @@
-import hashlib
-import json
 from src.simulation.value_generator import generator_batteryTemperature
-from datetime import datetime, timezone
+from src.producers.event import build_event
 
-def sensor_temperature_battery(id, tax, seconds_elapsed, frozen_ref, drift_ref):
-    timestamp = datetime.now(timezone.utc).isoformat()
-    value = generator_batteryTemperature(tax, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
+SENSOR_ID = "sensor-temperature-battery-08"
+SENSOR_TYPE = "temperature-battery"
+
+def sensor_temperature_battery(batch_id, ramp_rate, seconds_elapsed, frozen_ref, drift_ref):
+    value = generator_batteryTemperature(ramp_rate, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
     
-    event_id = hashlib.sha256(
-        json.dumps({
-            "batch_id": id,
-            "value": value,
-            "timestamp": timestamp
-        }, sort_keys=True).encode()
-    ).hexdigest()
-
-    return {
-        "event_id": event_id,
-        "batch_id": id,
-        "sensor_id": "sensor-temperature-battery-08",
-        "type": "temperature-battery",
-        "value": value,
-        "event_timestamp": timestamp
-    }
+    return build_event(SENSOR_ID, SENSOR_TYPE, batch_id, value)

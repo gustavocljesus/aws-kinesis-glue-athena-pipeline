@@ -1,25 +1,10 @@
-import hashlib
-import json
 from src.simulation.value_generator import generator_hydraulicPressure
-from datetime import datetime, timezone
+from src.producers.event import build_event
 
-def sensor_hydraulic(id, tax, seconds_elapsed, frozen_ref, drift_ref):
-    timestamp = datetime.now(timezone.utc).isoformat()
-    value = generator_hydraulicPressure(tax, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
+SENSOR_ID = "sensor-hydraulic-01"
+SENSOR_TYPE = "hydraulic-pressure"
 
-    event_id = hashlib.sha256(
-        json.dumps({
-            "batch_id": id,
-            "value": value,
-            "timestamp": timestamp
-        }, sort_keys=True).encode()
-    ).hexdigest()
+def sensor_hydraulic(batch_id, ramp_rate, seconds_elapsed, frozen_ref, drift_ref):
+    value = generator_hydraulicPressure(ramp_rate, seconds_elapsed, frozen_ref=frozen_ref, drift_ref=drift_ref)
 
-    return {
-        "event_id": event_id,
-        "batch_id": id,
-        "sensor_id": "sensor-hydraulic-01",
-        "type": "hydraulic-pressure",
-        "value": value,
-        "event_timestamp": timestamp
-    }
+    return build_event(SENSOR_ID, SENSOR_TYPE, batch_id, value)
