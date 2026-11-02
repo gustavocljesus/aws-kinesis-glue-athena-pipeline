@@ -2,6 +2,7 @@ from random import random, choice, gauss, randint
 from typing import Callable
 
 OUTLIER_RATE = 0.05
+DRIFT_START_OFFSET = 0.04
 STEP_DRIFT = 0.01    
 
 def apply_error(value: float, error_weights: dict, frozen_ref=None, drift_ref=None):
@@ -42,7 +43,7 @@ def start_drift_event(drift_ref: dict, value: float) -> float:
     drift_ref["episode_duration"] = randint(6, 10) - 1
     drift_ref["step"] = 0
     drift_ref["accumulation"] = 0
-    drift_ref["offset"] = 0.04
+    drift_ref["offset"] = DRIFT_START_OFFSET 
 
     return round(value * (1 + drift_ref["offset"]), 4)
 

@@ -27,17 +27,15 @@ client = boto3.client('kinesis', config=Config(
 ))
 STREAM_NAME = os.environ["STREAM_NAME"]
 
-OFFSET = 0.04
-
 frozen_refs = {
     "hydraulic": {"is_event": False, "value": None, "episode_duration": 0},
     "battery":   {"is_event": False, "value": None, "episode_duration": 0},
     "power":     {"is_event": False, "value": None, "episode_duration": 0}
 }
 drift_refs = {
-    "hydraulic": {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": OFFSET},
-    "battery":   {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": OFFSET},
-    "power":     {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": OFFSET}
+    "hydraulic": {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0},
+    "battery":   {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0},
+    "power":     {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0}
 }
 
 def send_batch(client, stream_name: str, records: list) -> tuple[int, int]: 
