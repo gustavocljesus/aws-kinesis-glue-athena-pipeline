@@ -1,4 +1,4 @@
-from random import random, uniform, gauss, randint
+from random import random, choice, gauss, randint
 from typing import Callable
 
 OUTLIER_RATE = 0.05
@@ -47,11 +47,11 @@ def start_drift_event(drift_ref: dict, value: float) -> float:
     return round(value * (1 + drift_ref["offset"]), 4)
 
 def bias_error(value: float) -> float:
-    offset = uniform(-0.03, 0.03) * value  # offset fixo de ±3%
+    offset = choice([-0.03, 0.03]) * value  
     return round(value + offset, 4)
 
 def noise_error(value: float) -> float:
-    return round(gauss(value, value * 0.02), 4)  # ruído gaussiano 2%
+    return round(gauss(value, value * 0.02), 4) 
 
 def missing_error() -> None:
     return None
@@ -87,7 +87,8 @@ def step_drift_event(drift_ref: dict) -> float:
     elif drift_ref["accumulation"] > 0:
         drift_ref["accumulation"] -= 1
         drift_ref["offset"] = round(drift_ref["offset"] - STEP_DRIFT, 4)
-    else:
-        drift_ref["is_event"] = False
 
+        if drift_ref["accumulation"] <= 0:
+            drift_ref["is_event"] = False
+            
     return drift_ref["offset"]
