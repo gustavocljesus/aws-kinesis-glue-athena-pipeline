@@ -52,7 +52,7 @@ if __name__ == "__main__":
     PAUSE = args.sleep 
     RAMP_RATE = 0.2 / args.ramp_duration
 
-    id_batch = 0
+    batch_id = 0
     sent_successfully = 0
     failed_to_send = 0 
 
@@ -60,12 +60,12 @@ if __name__ == "__main__":
 
     try:
         while True:
-            id_batch += 1
+            batch_id += 1
             seconds_elapsed = round(time.time() - start_pipeline, 3)
             records = [
-                hp.sensor_hydraulic(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["hydraulic"], drift_ref=drift_refs["hydraulic"]),
-                pf.sensor_power_factor(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["power"], drift_ref=drift_refs["power"]),
-                tb.sensor_temperature_battery(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["battery"], drift_ref=drift_refs["battery"])
+                hp.sensor_hydraulic(batch_id, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["hydraulic"], drift_ref=drift_refs["hydraulic"]),
+                pf.sensor_power_factor(batch_id, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["power"], drift_ref=drift_refs["power"]),
+                tb.sensor_temperature_battery(batch_id, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["battery"], drift_ref=drift_refs["battery"])
             ]
 
             success, failed = send_batch(client, STREAM_NAME, records)
