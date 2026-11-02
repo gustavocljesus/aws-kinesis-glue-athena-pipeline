@@ -9,6 +9,7 @@ from src.producers import (
     power_factor as pf,
     temperature_battery as tb
 )
+from src.simulation.error_model import (new_frozen_ref, new_drift_ref)
 from src.ingestion.stream_writer import send_kinesis
 from botocore.exceptions import BotoCoreError, ClientError
 from botocore.config import Config
@@ -27,16 +28,10 @@ client = boto3.client('kinesis', config=Config(
 ))
 STREAM_NAME = os.environ["STREAM_NAME"]
 
-frozen_refs = {
-    "hydraulic": {"is_event": False, "value": None, "episode_duration": 0},
-    "battery":   {"is_event": False, "value": None, "episode_duration": 0},
-    "power":     {"is_event": False, "value": None, "episode_duration": 0}
-}
-drift_refs = {
-    "hydraulic": {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0},
-    "battery":   {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0},
-    "power":     {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0}
-}
+SENSORS = ("hydraulic", "battery", "power")
+
+frozen_refs = {name: new_frozen_ref() for name in SENSORS}
+drift_refs = {name: new_drift_ref() for name in SENSORS}
 
 def send_batch(client, stream_name: str, records: list) -> tuple[int, int]: 
     success = 0

@@ -93,3 +93,9 @@ def step_drift_event(drift_ref: dict) -> float:
             drift_ref["is_event"] = False
             
     return drift_ref["offset"]
+
+def new_frozen_ref() -> dict:
+    return {"is_event": False, "value": None, "episode_duration": 0}
+
+def new_drift_ref() -> dict:
+    return {"is_event": False, "episode_duration": 0, "step": 0, "accumulation": 0, "offset": 0}
