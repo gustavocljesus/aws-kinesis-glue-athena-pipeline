@@ -4,12 +4,8 @@ import os
 from src.utils.logger import get_logger
 from dotenv import load_dotenv
 from cli import parse_args
-from src.producers import (
-    hydraulic_pressure as hp,
-    power_factor as pf,
-    temperature_battery as tb
-)
-from src.ingestion.stream_writer import send_kinesis
+from producers import hydraulic_prepressure as hp, power_factor as pf, temperature_battery as tb
+from ingestion.stream_writer import send_kinesis
 from botocore.exceptions import BotoCoreError, ClientError
 from botocore.config import Config
 
@@ -57,7 +53,7 @@ def send_batch(client, stream_name: str, records: list) -> tuple[int, int]:
 
 if __name__ == "__main__":
     PAUSE = args.sleep 
-    RAMP_RATE = 0.2 / args.ramp_duration
+    TAX = 0.2 / args.ramp_duration
 
     id_batch = 0
     sent_successfully = 0
@@ -70,9 +66,9 @@ if __name__ == "__main__":
             id_batch += 1
             seconds_elapsed = round(time.time() - start_pipeline, 3)
             records = [
-                hp.sensor_hydraulic(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["hydraulic"], drift_ref=drift_refs["hydraulic"]),
-                pf.sensor_power_factor(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["power"], drift_ref=drift_refs["power"]),
-                tb.sensor_temperature_battery(id_batch, RAMP_RATE, seconds_elapsed, frozen_ref=frozen_refs["battery"], drift_ref=drift_refs["battery"])
+                hp.sensor_hydraulic(id_batch, TAX, seconds_elapsed, frozen_ref=frozen_refs["hydraulic"], drift_ref=drift_refs["hydraulic"]),
+                pf.sensor_power_factor(id_batch, TAX, seconds_elapsed, frozen_ref=frozen_refs["power"], drift_ref=drift_refs["power"]),
+                tb.sensor_temperature_battery(id_batch, TAX, seconds_elapsed, frozen_ref=frozen_refs["battery"], drift_ref=drift_refs["battery"])
             ]
 
             success, failed = send_batch(client, STREAM_NAME, records)
