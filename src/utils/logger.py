@@ -1,22 +1,29 @@
 import logging
-from logging.handlers import RotatingFileHandler
 import os
+from logging.handlers import RotatingFileHandler
+
+_configured = False
 
 def get_logger(name: str) -> logging.Logger:
+    _configure_root()
     logger = logging.getLogger(name)
-    
-    if not logger.handlers:
-        formatter = logging.Formatter('[%(asctime)s] - %(levelname)s - %(message)s')
-
-        stream_handler = logging.StreamHandler()
-        stream_handler.setFormatter(formatter)
-
-        os.makedirs('logs', exist_ok=True)
-        file_handler = RotatingFileHandler('logs/pipeline.log', maxBytes=5_000_000, backupCount=3)
-        file_handler.setFormatter(formatter)
-
-        logger.setLevel(logging.INFO)
-        logger.addHandler(stream_handler)
-        logger.addHandler(file_handler)
-
+    logger.setLevel(logging.INFO)
     return logger
+
+def _configure_root() -> None:
+    global _configured
+    if _configured:
+        return
+
+    formatter = logging.Formatter('[%(asctime)s] - %(levelname)s - %(message)s')
+    os.makedirs('logs', exist_ok=True)
+
+    root = logging.getLogger()
+    for handler in (
+        logging.StreamHandler(),
+        RotatingFileHandler('logs/pipeline.log', maxBytes=5_000_000, backupCount=3),
+    ):
+        handler.setFormatter(formatter)
+        root.addHandler(handler)
+
+    _configured = True
